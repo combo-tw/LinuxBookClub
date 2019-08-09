@@ -1,6 +1,6 @@
 # Linux 讀書會
 ## 軟體清單 
-* Linux Kernel 2.6.34 [link](https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tag/?h=v2.6.34)
+* Linux Kernel 4.4.50 [link](https://github.com/raspberrypi/linux/tree/rpi-4.4.y)
 * QEMU 2.12.0
 * GDB 8.1 (for arm)
 * GCC 5.4
