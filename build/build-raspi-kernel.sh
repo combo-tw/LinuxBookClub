@@ -8,9 +8,9 @@ TOOLCHAIN=arm-linux-gnueabihf
 
 # Combine homework with linux kernel source
 git checkout -- linux
-echo "Input target folder name:"
-read foldername
-cp -Rv ../chapter/$foldername/* ./
+echo "Input target folder number:"
+read foldernumber
+find ../chapter -type d -name $foldernumber-* -exec cp -Rv {}/linux/. ./linux/ \;
 
 cd linux
 
@@ -40,17 +40,37 @@ if [ -e arch/arm/boot/dts/versatile-pb.dtb ] ; then
     read -p "Execute QEMU? [Y/n] " prompt
 
     if [[ $prompt =~ [yY](es)* ]] ; then
-        if [ ! -e ../2018-11-13-raspbian-stretch.img ] ; then
+        DISK_IMAGE=2018-11-13-raspbian-stretch.img
+
+        if [ ! -e ../$DISK_IMAGE ] ; then
             wget https://downloads.raspberrypi.org/raspbian/images/raspbian-2018-11-15/2018-11-13-raspbian-stretch.zip
             unzip 2018-11-13-raspbian-stretch.zip -d ../
             rm 2018-11-13-raspbian-stretch.zip
         fi
 
+        # Copy test file to Raspbian disk image
+        LOOPDEV=$(sudo losetup -P -f --show ../$DISK_IMAGE)
+
+        cd ..
+        mkdir one two
+        sudo mount -o loop ${LOOPDEV}p1 ./one
+        sudo mount -o loop ${LOOPDEV}p2 ./two
+
+        rm -rf ./two/home/pi/test/*
+        find ../chapter -type d -name $foldernumber-* -exec cp -Rv {}/test/. ./two/home/pi/test/ \;
+
+        sudo umount ./one
+        sudo umount ./two
+        sudo losetup -d ${LOOPDEV}
+        rm -r one two
+        cd linux
+
+        # Execute QEMU
         sudo qemu-system-arm \
             -M versatilepb \
             -cpu arm1176 \
             -m 256 \
-            -hda ../2018-11-13-raspbian-stretch.img \
+            -hda ../$DISK_IMAGE \
             -net nic \
             -net user,hostfwd=tcp::5022-:22 \
             -dtb ../versatile-pb.dtb \
