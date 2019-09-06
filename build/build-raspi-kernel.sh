@@ -30,9 +30,17 @@ EOF
 cat ../config_file >> .config
 cat ../config_ip_tables >> .config
 
+RETVAL=0
 make $MAKEFLAGS ARCH=arm CROSS_COMPILE=${TOOLCHAIN}- menuconfig
-make $MAKEFLAGS ARCH=arm CROSS_COMPILE=${TOOLCHAIN}- bzImage dtbs
+make $MAKEFLAGS ARCH=arm CROSS_COMPILE=${TOOLCHAIN}- bzImage dtbs || RETVAL=-1  
 cp arch/arm/boot/zImage $KERNEL_TARGET_FILE_NAME
+
+if [ $RETVAL -eq -1 ] ; then
+    RED=`tput setaf 1`
+    RESET=`tput sgr 0`
+    cd .. && echo -e "${RED}Compile Kernel Failed!!!${RESET}"
+    exit -1
+fi
 
 if [ -e arch/arm/boot/dts/versatile-pb.dtb ] ; then
     cp arch/arm/boot/dts/versatile-pb.dtb ../
