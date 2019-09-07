@@ -68,7 +68,19 @@ if [ -e arch/arm/boot/dts/versatile-pb.dtb ] ; then
         find ../chapter -type d -name $foldernumber-* -exec cp -Rv {}/test/. ./two/home/pi/test/ \;
 
         sudo umount ./one
-        sudo umount ./two
+
+        busy=true
+        while $busy
+        do
+            sudo umount ./two 2> /dev/null
+            if [ $? -eq 0 ] ; then
+                busy=false   # mount successful
+            else
+                echo -n '.'  # mount failed
+                sleep 2      # sleep 2 seconds
+            fi
+        done
+
         sudo losetup -d ${LOOPDEV}
         rm -r one two
         cd linux

@@ -13,7 +13,12 @@ all: $(OBJS)
 	$(CC) $^ -o $(EXEC)
 
 check: $(EXEC)
-	./$(EXEC)
+	@./$(EXEC); \
+	if [ $$? -eq 0 ] ; then \
+		echo "PASS."; \
+	else \
+		echo "FAIL."; \
+	fi
 
 clean:
 	rm -f $(OBJS) factorial_ut
