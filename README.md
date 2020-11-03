@@ -13,7 +13,14 @@
 	* 同步檔案至 build 資料夾  
 	`./build-raspi-kerenl.sh`
 	* 輸入章節的資料夾數字 (e.g. `03`)
-    * 選擇是否要啟動 QEMU
+	* 選擇是否要啟動 QEMU
+* 啟動
+	* 進入到 build 目錄
+	`cd build`
+	* 啟動已經編好的 Kernel 及 DTB
+	`./start-raspi-kernel.sh`
+	* 輸入要載入的章節資料夾數字 (e.g. `03`)
+	* 接著就會自動啟動 QEMU
 * 建立新的 Kernel 空目錄
 	* 進入到 linux 目錄  
 	`cd build/linux`

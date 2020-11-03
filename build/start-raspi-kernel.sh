@@ -14,6 +14,18 @@ DISK_IMAGE=2018-11-13-raspbian-stretch.img
 KERNEL_VERSION=$(make kernelversion)
 KERNEL_TARGET_FILE_NAME=../qemu-kernel-$KERNEL_VERSION
 
+if [ ! -e ../$KERNEL_TARGET_FILE_NAME ] ; then
+    cd ../
+    echo -e "${RED}Kernel Image Not Exist!!!${RESET}"
+    exit -1
+fi
+
+if [ ! -e ../versatile-pb.dtb ] ; then
+    cd ../
+    echo -e "${RED}DTB Not Exist!!!${RESET}"
+    exit -1
+fi
+
 if [ ! -e ../$DISK_IMAGE ] ; then
     wget https://downloads.raspberrypi.org/raspbian/images/raspbian-2018-11-15/2018-11-13-raspbian-stretch.zip
     unzip 2018-11-13-raspbian-stretch.zip -d ../
