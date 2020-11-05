@@ -14,7 +14,7 @@ DISK_IMAGE=2018-11-13-raspbian-stretch.img
 KERNEL_VERSION=$(make kernelversion)
 KERNEL_TARGET_FILE_NAME=../qemu-kernel-$KERNEL_VERSION
 
-if [ ! -e ../$KERNEL_TARGET_FILE_NAME ] ; then
+if [ ! -e $KERNEL_TARGET_FILE_NAME ] ; then
     cd ../
     echo -e "${RED}Kernel Image Not Exist!!!${RESET}"
     exit -1
