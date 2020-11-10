@@ -4,11 +4,6 @@
 #
 #######################################################
 
-cd linux
-git checkout -- .
-git clean -fd
-cd ..
-
 # Started QEMU with now Kernel
 echo "Input target folder number:"
 read foldernumber
