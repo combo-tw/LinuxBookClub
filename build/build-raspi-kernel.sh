@@ -6,8 +6,12 @@
 
 TOOLCHAIN=arm-linux-gnueabihf
 
+cd linux
+git checkout -- .
+git clean -fd
+cd ..
+
 # Combine homework with linux kernel source
-git checkout -- linux
 echo "Input target folder number:"
 read foldernumber
 find ../chapter -type d -name $foldernumber-* -exec cp -Rv {}/linux/. ./linux/ \;
