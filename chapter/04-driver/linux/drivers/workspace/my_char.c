@@ -3,6 +3,8 @@
 #include <linux/fs.h>
 #include <linux/cdev.h>
 #include <asm/ioctl.h>
+#include <linux/uaccess.h>
+#include <linux/kernel.h>
 
 MODULE_LICENSE("Dual BSD/GPL");
 
@@ -12,26 +14,33 @@ MODULE_LICENSE("Dual BSD/GPL");
 
 struct my_device_data {
 	struct cdev cdev;
+	char index;
 };
 
 struct my_device_data devs[MY_MAX_MINORS];
 
-const int arr[5];
+char arr[5];
 
 static int my_open(struct inode *inode, struct file *file)
-{
+{ 
+	struct my_device_data *my_data = container_of(inode->i_cdev, struct my_device_data, cdev);
+	
+	/* validate access to device */
+    file->private_data = &my_data->index;
 	return 0;
 }
 
 static int my_read(struct file *file, char __user *user_buffer,
 					size_t size, loff_t *offset)
 {
+	copy_to_user(user_buffer, (arr + *(char*)(file->private_data)), 1);
 	return 0;
 }
 
 static int my_write(struct file *file, const char __user *user_buffer,
 					size_t size, loff_t * offset)
 {
+	copy_from_user((arr + *(char*)(file->private_data)), user_buffer, 1);
 	return 0;
 }
 
@@ -67,15 +76,16 @@ static __init int my_char_init(void)
 		/* initialize devs[i] fields */
 		cdev_init(&devs[i].cdev, &my_fops);
 		cdev_add(&devs[i].cdev, MKDEV(MY_CDEB_MAJOR, i), 1);
+		devs[i].index = i;
 	}
-	printk(KERN_INFO "Hello kernel\n");
+	printk(KERN_INFO "[MyChar][My_Char_Init] Hello kernel\n");
 	return 0;
 }
 
 static void __exit my_char_exit(void)
 {
 	int i;
-	printk(KERN_INFO "Goodbye\n");
+	printk(KERN_INFO "[MyChar][My_Char_Exit] Goodbye\n");
 
 	for(i = 0; i < MY_MAX_MINORS; i++) {
 		/* release devs[i] fields */
