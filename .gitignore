@@ -2,3 +2,4 @@ build/linux
 qemu-kernel-*
 versatile-pb.dtb
 *-raspbian-stretch.img
+*-raspbian-stretch.zip
