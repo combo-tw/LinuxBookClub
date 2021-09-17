@@ -3,6 +3,8 @@
 #include <linux/fs.h>
 #include <linux/cdev.h>
 #include <asm/ioctl.h>
+#include <linux/uaccess.h>
+#include <linux/kernel.h>
 
 MODULE_LICENSE("Dual BSD/GPL");
 
@@ -16,7 +18,7 @@ struct my_device_data {
 
 struct my_device_data devs[MY_MAX_MINORS];
 
-const int arr[5];
+unsigned char arr[5];
 
 static int my_open(struct inode *inode, struct file *file)
 {
